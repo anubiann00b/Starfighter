@@ -32,7 +32,7 @@ public class MainRenderSystem extends IteratingSystem {
         if (ttc.hide) return;
 
         Texture texture = game.assetManager.get(entity.getComponent(TextureComponent.class).file, Texture.class);
-        texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         game.batch.setColor(ttc.color);
 

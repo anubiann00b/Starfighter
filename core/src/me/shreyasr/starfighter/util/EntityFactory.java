@@ -25,7 +25,7 @@ public class EntityFactory {
         VelComponent vel = new VelComponent();
         DirComponent dir = new DirComponent();
         TextureComponent tex = new TextureComponent();
-        TextureTransformComponent ttc = TextureTransformComponent.create(95, 141, 0.5f);
+        TextureTransformComponent ttc = TextureTransformComponent.create(95, 141, 0.75f);
 
         tex.file = Assets.FIGHTER.getFile();
 
