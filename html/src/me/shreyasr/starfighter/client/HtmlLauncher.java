@@ -6,9 +6,9 @@ import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
 import com.sksamuel.gwt.websockets.Websocket;
 import com.sksamuel.gwt.websockets.WebsocketListenerExt;
 
-import me.shreyasr.starfighter.CrossPlatformWebSocketListener;
-import me.shreyasr.starfighter.GameMain;
-import me.shreyasr.starfighter.WebsocketSender;
+import me.shreyasr.starfighter.network.CrossPlatformWebSocketListener;
+import me.shreyasr.starfighter.StarfighterGame;
+import me.shreyasr.starfighter.network.WebsocketSender;
 
 public class HtmlLauncher extends GwtApplication {
 
@@ -21,7 +21,7 @@ public class HtmlLauncher extends GwtApplication {
     public ApplicationListener getApplicationListener() {
         final Websocket webSocketClient = new Websocket("ws://localhost:80");
 
-        GameMain game = new GameMain(new WebsocketSender() {
+        StarfighterGame game = new StarfighterGame(new WebsocketSender() {
             @Override
             public void send(String message) {
                 webSocketClient.send(message);

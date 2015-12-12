@@ -1,13 +1,8 @@
-package me.shreyasr.starfighter;
+package me.shreyasr.starfighter.network;
 
-public interface CrossPlatformWebSocketListener {
-    void onOpen();
-    void onClose(int code, String reason, boolean remote);
-    void onMessage(String message);
-    void onError(Exception ex);
-}
+import me.shreyasr.starfighter.util.Log;
 
-class WebSocketListenerImpl implements CrossPlatformWebSocketListener {
+public class WebSocketListenerImpl implements CrossPlatformWebSocketListener {
 
     @Override
     public void onOpen() {
@@ -26,7 +21,6 @@ class WebSocketListenerImpl implements CrossPlatformWebSocketListener {
 
     @Override
     public void onError(Exception ex) {
-        Log.e("websocket error: " + ex);
+        Log.e(ex);
     }
 }
-

@@ -9,16 +9,19 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import me.shreyasr.starfighter.CrossPlatformWebSocketListener;
-import me.shreyasr.starfighter.GameMain;
-import me.shreyasr.starfighter.WebsocketSender;
+import me.shreyasr.starfighter.network.CrossPlatformWebSocketListener;
+import me.shreyasr.starfighter.StarfighterGame;
+import me.shreyasr.starfighter.network.WebsocketSender;
+import me.shreyasr.starfighter.util.Log;
 
 public class DesktopLauncher {
 	public static void main(String[] arg) throws URISyntaxException {
-		final ForwardingWebSocketClient webSocketClient
+        Log.setConsoleHandler();
+
+        final ForwardingWebSocketClient webSocketClient
 				= new ForwardingWebSocketClient(new URI("ws://localhost:80"));
 
-		GameMain game = new GameMain(new WebsocketSender() {
+		StarfighterGame game = new StarfighterGame(new WebsocketSender() {
 			@Override
 			public void send(String message) {
 				webSocketClient.send(message);

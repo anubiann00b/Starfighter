@@ -1,8 +1,8 @@
-package me.shreyasr.starfighter;
+package me.shreyasr.starfighter.util;
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Gdx;
-
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -11,22 +11,23 @@ import java.util.logging.Logger;
 public class Log {
 
     private static Logger logger = Logger.getLogger("Main Logger");
-    static {
-        if (Gdx.app.getType() != Application.ApplicationType.WebGL) {
-            setConsoleHandler(logger);
-        }
-    }
 
     public static void e(String msg) {
         logger.log(Level.SEVERE, msg);
     }
 
+    public static void e(Throwable e) {
+        ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+        e.printStackTrace(new PrintWriter(byteOutputStream));
+        String stackTrace = new String(byteOutputStream.toByteArray(), Charset.forName("UTF-8"));
+        e(stackTrace);
+    }
+
     public static void i(String msg) {
-        e(Gdx.app.getType().name());
         logger.log(Level.INFO, msg);
     }
 
-    private static void setConsoleHandler(Logger logger) {
+    public static void setConsoleHandler() {
         logger.setUseParentHandlers(false);
         logger.addHandler(new Handler() {
             @Override
