@@ -35,8 +35,8 @@ public class CameraUpdateSystem extends EntitySystem {
     public void update(float deltaTime) {
         PosComponent pos = player.getComponent(PosComponent.class);
         camera.position.set(
-                MathHelper.clamp(viewport.getWorldWidth() /2, pos.x, 3840-viewport.getWorldWidth() /2),
-                MathHelper.clamp(viewport.getWorldHeight()/2, pos.y, 3840-viewport.getWorldHeight()/2),
+                MathHelper.clamp(viewport.getWorldWidth() /2, pos.x, 4096-viewport.getWorldWidth() /2),
+                MathHelper.clamp(viewport.getWorldHeight()/2, pos.y, 4096-viewport.getWorldHeight()/2),
                 0);
         viewport.apply();
         camera.update();

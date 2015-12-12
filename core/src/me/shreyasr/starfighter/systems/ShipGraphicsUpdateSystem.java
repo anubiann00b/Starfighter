@@ -25,7 +25,7 @@ public class ShipGraphicsUpdateSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         TextureTransformComponent ttc = entity.getComponent(TextureTransformComponent.class);
 
-        ttc.rotation = entity.getComponent(DirComponent.class).dir;
+        ttc.rotation = (float) (180/Math.PI*entity.getComponent(DirComponent.class).dir)-90;
 
     }
 }

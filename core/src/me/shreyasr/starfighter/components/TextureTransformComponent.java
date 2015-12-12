@@ -9,10 +9,10 @@ public class TextureTransformComponent implements Component {
         TextureTransformComponent ttc = new TextureTransformComponent();
         ttc.srcWidth = width;
         ttc.srcHeight = height;
-        ttc.originX = width/2;
-        ttc.originY = height/2;
         ttc.screenWidth = Math.round(width*scale);
         ttc.screenHeight = Math.round(height*scale);
+        ttc.originX = ttc.screenWidth/2;
+        ttc.originY = ttc.screenHeight/2;
         return ttc;
     }
 

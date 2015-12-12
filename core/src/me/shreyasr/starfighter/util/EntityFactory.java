@@ -7,6 +7,7 @@ import me.shreyasr.starfighter.components.PosComponent;
 import me.shreyasr.starfighter.components.TextureComponent;
 import me.shreyasr.starfighter.components.TextureTransformComponent;
 import me.shreyasr.starfighter.components.TypeComponent;
+import me.shreyasr.starfighter.components.VelComponent;
 
 public class EntityFactory {
 
@@ -21,16 +22,16 @@ public class EntityFactory {
         e.add(new TypeComponent.Ship());
 
         PosComponent pos = new PosComponent();
-        pos.x = 100;
-        pos.y = 100;
+        VelComponent vel = new VelComponent();
         DirComponent dir = new DirComponent();
         TextureComponent tex = new TextureComponent();
-        TextureTransformComponent ttc = TextureTransformComponent.create(95, 141, 1);
+        TextureTransformComponent ttc = TextureTransformComponent.create(95, 141, 0.5f);
 
         tex.file = Assets.FIGHTER.getFile();
 
-        e.add(dir);
         e.add(pos);
+        e.add(vel);
+        e.add(dir);
         e.add(tex);
         e.add(ttc);
 
