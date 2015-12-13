@@ -17,7 +17,6 @@ class GameServer extends WebSocketServer {
 
   override def onClose(conn: WebSocket, code: Int, reason: String, remote: Boolean): Unit = {
     println("closed " + conn.getRemoteSocketAddress + " with exit code " + code + " because: " + reason)
-
   }
 
   override def onOpen(conn: WebSocket, handshake: ClientHandshake): Unit = {

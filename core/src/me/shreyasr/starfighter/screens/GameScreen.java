@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import me.shreyasr.starfighter.StarfighterGame;
+import me.shreyasr.starfighter.event.EventQueue;
 import me.shreyasr.starfighter.systems.CameraUpdateSystem;
+import me.shreyasr.starfighter.systems.EventQueueUpdateSystem;
 import me.shreyasr.starfighter.systems.MyShipMovementSystem;
 import me.shreyasr.starfighter.systems.ShipGraphicsUpdateSystem;
 import me.shreyasr.starfighter.systems.VelocityUpdateSystem;
@@ -24,6 +26,7 @@ public class GameScreen extends ScreenAdapter {
     private StarfighterGame game;
     private Engine engine;
     private ExtendViewport viewport;
+    private EventQueue eventQueue;
     private boolean initialized = false;
 
     public GameScreen(StarfighterGame game) {
@@ -34,6 +37,7 @@ public class GameScreen extends ScreenAdapter {
     public void show() {
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         engine = new Engine();
+        eventQueue = new EventQueue(engine);
         OrthographicCamera camera = new OrthographicCamera(640, 480);
         viewport = new ExtendViewport(800, 600, 1280, 720, camera);
 
@@ -41,9 +45,10 @@ public class GameScreen extends ScreenAdapter {
 
         int priority = 0;
         // @formatter:off
-        engine.addSystem(new MyShipMovementSystem     (++priority));
+        engine.addSystem(new MyShipMovementSystem     (++priority, eventQueue));
         engine.addSystem(new VelocityUpdateSystem     (++priority));
         engine.addSystem(new ShipGraphicsUpdateSystem (++priority));
+        engine.addSystem(new EventQueueUpdateSystem   (++priority, eventQueue));
 
         engine.addSystem(new CameraUpdateSystem        (++priority, game, camera, viewport));
         engine.addSystem(new PreBatchRenderSystem      (++priority, game, camera));
