@@ -91,6 +91,8 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
         compile "com.esotericsoftware.kryo:kryo:2.24.0"
+//        compile "name.pehl:piriti-user:0.10"
+//        compile "name.pehl:piriti-dev:0.10"
     }
 }
 

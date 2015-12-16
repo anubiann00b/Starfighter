@@ -8,7 +8,7 @@ import com.sksamuel.gwt.websockets.WebsocketListenerExt;
 
 import me.shreyasr.starfighter.network.CrossPlatformWebSocketListener;
 import me.shreyasr.starfighter.StarfighterGame;
-import me.shreyasr.starfighter.network.WebsocketSender;
+import me.shreyasr.starfighter.network.WebSocketSender;
 
 public class HtmlLauncher extends GwtApplication {
 
@@ -21,14 +21,14 @@ public class HtmlLauncher extends GwtApplication {
     public ApplicationListener getApplicationListener() {
         final Websocket webSocketClient = new Websocket("ws://localhost:80");
 
-        StarfighterGame game = new StarfighterGame(new WebsocketSender() {
+        StarfighterGame game = new StarfighterGame(new WebSocketSender() {
             @Override
-            public void send(String message) {
-                webSocketClient.send(message);
+            public void send(String messageBase64) {
+                webSocketClient.send(messageBase64);
             }
         });
 
-        webSocketClient.addListener(new ForwardingWebSocketListener(game.listener));
+        webSocketClient.addListener(new ForwardingWebSocketListener(game.webSocketListener));
         webSocketClient.open();
 
         return game;
@@ -59,7 +59,7 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public void onError() {
-            listener.onError(new Exception("websocket error"));
+            listener.onError(new Exception("unknown websocket error"));
         }
     }
 }

@@ -7,9 +7,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import me.shreyasr.starfighter.network.CrossPlatformWebSocketListener;
-import me.shreyasr.starfighter.network.WebSocketListenerImpl;
-import me.shreyasr.starfighter.network.WebsocketSender;
+import me.shreyasr.starfighter.network.AccumulatingWebSocketListener;
+import me.shreyasr.starfighter.network.WebSocketSender;
 import me.shreyasr.starfighter.screens.LoadingScreen;
 import me.shreyasr.starfighter.util.Assets;
 
@@ -20,12 +19,12 @@ public class StarfighterGame extends Game {
     public AssetManager assetManager;
     public BitmapFont font;
 
-	public final CrossPlatformWebSocketListener listener;
-	private WebsocketSender websocketSender;
+	public final AccumulatingWebSocketListener webSocketListener;
+	public final WebSocketSender webSocketSender;
 
-	public StarfighterGame(WebsocketSender websocketSender) {
-		this.websocketSender = websocketSender;
-		this.listener = new WebSocketListenerImpl();
+	public StarfighterGame(WebSocketSender webSocketSender) {
+		this.webSocketSender = webSocketSender;
+		this.webSocketListener = new AccumulatingWebSocketListener();
 	}
 	
 	@Override

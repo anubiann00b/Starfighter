@@ -3,6 +3,8 @@ package me.shreyasr.starfighter
 object ServerMain {
 
   def main(args: Array[String]) {
-    new GameServer().run()
+    val server: GameServer = new GameServer
+    new Thread(server).start()
+    server.runEngine()
   }
 }

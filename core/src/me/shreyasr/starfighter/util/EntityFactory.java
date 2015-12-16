@@ -28,7 +28,7 @@ public class EntityFactory {
         e.add(TextureTransformComponent.create(95, 141, 0.75f));
         e.add(new PosComponent());
         e.add(new VelComponent());
-        e.add(new IdComponent());
+        e.add(IdComponent.create());
         e.add(new DirComponent());
         e.add(new TypeComponent.Ship());
 

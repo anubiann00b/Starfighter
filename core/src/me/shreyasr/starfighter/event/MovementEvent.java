@@ -6,8 +6,10 @@ import me.shreyasr.starfighter.components.VelComponent;
 
 public class MovementEvent extends Event {
 
-    private final long targetId;
-    public final double acceleration;
+    private long targetId;
+    public double acceleration;
+
+    protected MovementEvent() { }
 
     public MovementEvent(long startMillis, long targetId, double acceleration) {
         super(startMillis);
@@ -19,7 +21,7 @@ public class MovementEvent extends Event {
     public boolean resolve(EventResolutionData data) {
         Entity target = data.getEntityById(targetId);
 
-        target.getComponent(VelComponent.class).velocity += acceleration;
+        if (target != null) target.getComponent(VelComponent.class).velocity += acceleration;
         return true;
     }
 }

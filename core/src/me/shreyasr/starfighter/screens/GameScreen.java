@@ -1,25 +1,32 @@
 package me.shreyasr.starfighter.screens;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import me.shreyasr.starfighter.StarfighterGame;
+import me.shreyasr.starfighter.event.EntityCreateEvent;
 import me.shreyasr.starfighter.event.EventQueue;
 import me.shreyasr.starfighter.systems.CameraUpdateSystem;
+import me.shreyasr.starfighter.systems.EventQueueNetworkPopulator;
+import me.shreyasr.starfighter.systems.EventQueueNetworkSender;
 import me.shreyasr.starfighter.systems.EventQueueUpdateSystem;
 import me.shreyasr.starfighter.systems.MyShipMovementSystem;
 import me.shreyasr.starfighter.systems.ShipGraphicsUpdateSystem;
 import me.shreyasr.starfighter.systems.VelocityUpdateSystem;
 import me.shreyasr.starfighter.systems.render.BackgroundRenderSystem;
 import me.shreyasr.starfighter.systems.render.MainRenderSystem;
+import me.shreyasr.starfighter.systems.render.PostRenderSystem;
 import me.shreyasr.starfighter.systems.render.PreBatchRenderSystem;
 import me.shreyasr.starfighter.systems.render.PreShapeRenderSystem;
 import me.shreyasr.starfighter.systems.render.SetProjectionMatrixSystem;
 import me.shreyasr.starfighter.util.EntityFactory;
+import me.shreyasr.starfighter.util.KryoManager;
 
 public class GameScreen extends ScreenAdapter {
 
@@ -41,14 +48,17 @@ public class GameScreen extends ScreenAdapter {
         OrthographicCamera camera = new OrthographicCamera(640, 480);
         viewport = new ExtendViewport(800, 600, 1280, 720, camera);
 
-        engine.addEntity(EntityFactory.createPlayerShip());
+        Entity player = EntityFactory.createPlayerShip();
+        engine.addEntity(player);
 
         int priority = 0;
         // @formatter:off
-        engine.addSystem(new MyShipMovementSystem     (++priority, eventQueue));
-        engine.addSystem(new VelocityUpdateSystem     (++priority));
-        engine.addSystem(new ShipGraphicsUpdateSystem (++priority));
-        engine.addSystem(new EventQueueUpdateSystem   (++priority, eventQueue));
+        engine.addSystem(new MyShipMovementSystem       (++priority, eventQueue));
+        engine.addSystem(new VelocityUpdateSystem       (++priority));
+        engine.addSystem(new ShipGraphicsUpdateSystem   (++priority));
+        engine.addSystem(new EventQueueNetworkSender    (++priority, game.webSocketSender, eventQueue));
+        engine.addSystem(new EventQueueNetworkPopulator (++priority, game.webSocketListener, eventQueue));
+        engine.addSystem(new EventQueueUpdateSystem     (++priority, eventQueue));
 
         engine.addSystem(new CameraUpdateSystem        (++priority, game, camera, viewport));
         engine.addSystem(new PreBatchRenderSystem      (++priority, game, camera));
@@ -61,6 +71,9 @@ public class GameScreen extends ScreenAdapter {
 
         Gdx.input.setInputProcessor(inputMultiplexer);
         inputMultiplexer.addProcessor(engine.getSystem(MyShipMovementSystem.class).input);
+
+        game.webSocketSender.send(new String(
+                Base64Coder.encode(KryoManager.encode(new EntityCreateEvent(0, player)))));
 
         initialized = true;
     }

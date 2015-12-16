@@ -6,8 +6,10 @@ import me.shreyasr.starfighter.components.DirComponent;
 
 public class TurnEvent extends Event {
 
-    private final long targetId;
-    public final double acceleration;
+    private long targetId;
+    public double acceleration;
+
+    protected TurnEvent() { }
 
     public TurnEvent(long startMillis, long targetId, double acceleration) {
         super(startMillis);
@@ -19,7 +21,7 @@ public class TurnEvent extends Event {
     public boolean resolve(EventResolutionData data) {
         Entity target = data.getEntityById(targetId);
 
-        target.getComponent(DirComponent.class).dir += acceleration;
+        if (target != null) target.getComponent(DirComponent.class).dir += acceleration;
         return true;
     }
 }

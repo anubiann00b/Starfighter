@@ -4,6 +4,8 @@ public class CancelEvent extends Event {
 
     private long id;
 
+    protected CancelEvent() { }
+
     public CancelEvent(long startTime, long id) {
         super(startTime);
         this.id = id;

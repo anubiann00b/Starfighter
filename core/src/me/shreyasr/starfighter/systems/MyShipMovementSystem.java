@@ -33,7 +33,9 @@ public class MyShipMovementSystem extends PlayerSystem {
         boolean down = input.isKeyPressed(Input.Keys.DOWN);
 
         if (up && down) {
-            cancelCurrentMoveEvent();
+            if (currentMoveEvent != null) {
+                cancelCurrentMoveEvent();
+            }
         } else if (up) {
             if (currentMoveEvent == null) {
                 addMovementEvent(id.id, .1);
@@ -58,7 +60,9 @@ public class MyShipMovementSystem extends PlayerSystem {
         boolean right = input.isKeyPressed(Input.Keys.RIGHT);
 
         if (left && right) {
-            cancelCurrentTurnEvent();
+            if (currentTurnEvent != null) {
+                cancelCurrentTurnEvent();
+            }
         } else if (left) {
             if (currentTurnEvent == null) {
                 addTurnEvent(id.id, .015);

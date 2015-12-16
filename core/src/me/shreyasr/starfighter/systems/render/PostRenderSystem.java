@@ -1,4 +1,4 @@
-package me.shreyasr.starfighter.screens;
+package me.shreyasr.starfighter.systems.render;
 
 import com.badlogic.ashley.core.EntitySystem;
 

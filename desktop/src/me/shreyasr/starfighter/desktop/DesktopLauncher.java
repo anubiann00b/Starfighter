@@ -9,26 +9,27 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import me.shreyasr.starfighter.network.CrossPlatformWebSocketListener;
 import me.shreyasr.starfighter.StarfighterGame;
-import me.shreyasr.starfighter.network.WebsocketSender;
+import me.shreyasr.starfighter.network.CrossPlatformWebSocketListener;
+import me.shreyasr.starfighter.network.WebSocketSender;
 import me.shreyasr.starfighter.util.Log;
 
 public class DesktopLauncher {
+
 	public static void main(String[] arg) throws URISyntaxException {
         Log.setConsoleHandler();
 
         final ForwardingWebSocketClient webSocketClient
 				= new ForwardingWebSocketClient(new URI("ws://localhost:80"));
 
-		StarfighterGame game = new StarfighterGame(new WebsocketSender() {
+		StarfighterGame game = new StarfighterGame(new WebSocketSender() {
 			@Override
-			public void send(String message) {
-				webSocketClient.send(message);
+			public void send(String messageBase64) {
+                webSocketClient.send(messageBase64);
 			}
 		});
 
-		webSocketClient.setListener(game.listener);
+		webSocketClient.setListener(game.webSocketListener);
 		webSocketClient.connect();
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

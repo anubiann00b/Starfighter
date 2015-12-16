@@ -9,6 +9,8 @@ public abstract class Event implements Comparable<Event> {
     public long startMillis;
     public long id;
 
+    protected Event() { } // For serialization
+
     public Event(long startMillis) {
         this.startMillis = startMillis;
         id = random.nextLong();
