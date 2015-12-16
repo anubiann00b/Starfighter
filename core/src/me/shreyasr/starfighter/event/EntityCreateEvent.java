@@ -6,9 +6,9 @@ public class EntityCreateEvent extends Event {
 
     private Entity entity;
 
-    protected EntityCreateEvent() { }
+    public EntityCreateEvent() { }
 
-    public EntityCreateEvent(long startMillis, Entity entity) {
+    public EntityCreateEvent(double startMillis, Entity entity) {
         super(startMillis);
         this.entity = entity;
     }

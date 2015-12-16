@@ -2,17 +2,17 @@ package me.shreyasr.starfighter.components;
 
 import com.badlogic.ashley.core.Component;
 
-import java.security.SecureRandom;
+import java.util.Random;
 
 public class IdComponent implements Component {
 
-    private static SecureRandom random = new SecureRandom();
+    private static Random random = new Random();
 
     public static IdComponent create() {
         IdComponent id = new IdComponent();
-        id.id = random.nextLong();
+        id.id = random.nextDouble();
         return id;
     }
 
-    public long id;
+    public double id;
 }

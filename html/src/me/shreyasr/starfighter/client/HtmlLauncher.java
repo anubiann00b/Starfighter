@@ -3,11 +3,12 @@ package me.shreyasr.starfighter.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
+import com.google.gwt.core.client.GWT;
 import com.sksamuel.gwt.websockets.Websocket;
 import com.sksamuel.gwt.websockets.WebsocketListenerExt;
 
-import me.shreyasr.starfighter.network.CrossPlatformWebSocketListener;
 import me.shreyasr.starfighter.StarfighterGame;
+import me.shreyasr.starfighter.network.CrossPlatformWebSocketListener;
 import me.shreyasr.starfighter.network.WebSocketSender;
 
 public class HtmlLauncher extends GwtApplication {
@@ -24,7 +25,11 @@ public class HtmlLauncher extends GwtApplication {
         StarfighterGame game = new StarfighterGame(new WebSocketSender() {
             @Override
             public void send(String messageBase64) {
-                webSocketClient.send(messageBase64);
+                try {
+                    webSocketClient.send(messageBase64);
+                } catch (Exception e) {
+                    GWT.log(e.getMessage());
+                }
             }
         });
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
@@ -25,7 +26,11 @@ public class DesktopLauncher {
 		StarfighterGame game = new StarfighterGame(new WebSocketSender() {
 			@Override
 			public void send(String messageBase64) {
-                webSocketClient.send(messageBase64);
+				try {
+                    webSocketClient.send(messageBase64);
+                } catch (WebsocketNotConnectedException e) {
+                    System.out.println(e);
+                }
 			}
 		});
 

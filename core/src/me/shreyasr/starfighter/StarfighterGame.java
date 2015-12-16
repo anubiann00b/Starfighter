@@ -11,6 +11,7 @@ import me.shreyasr.starfighter.network.AccumulatingWebSocketListener;
 import me.shreyasr.starfighter.network.WebSocketSender;
 import me.shreyasr.starfighter.screens.LoadingScreen;
 import me.shreyasr.starfighter.util.Assets;
+import me.shreyasr.starfighter.util.JsonSerializer;
 
 public class StarfighterGame extends Game {
 
@@ -29,6 +30,7 @@ public class StarfighterGame extends Game {
 	
 	@Override
 	public void create() {
+        JsonSerializer.init();
         assetManager = new AssetManager();
         Assets.loadAll(assetManager);
 		batch = new SpriteBatch();

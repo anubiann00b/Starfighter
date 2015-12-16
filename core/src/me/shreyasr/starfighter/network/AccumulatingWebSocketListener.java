@@ -1,13 +1,13 @@
 package me.shreyasr.starfighter.network;
 
+import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import me.shreyasr.starfighter.util.Log;
 
 public class AccumulatingWebSocketListener implements CrossPlatformWebSocketListener {
 
-    private Queue<String> messages = new ConcurrentLinkedQueue<String>();
+    private Queue<String> messages = new LinkedList<String>();
 
     public String popMessage() {
         return messages.poll();

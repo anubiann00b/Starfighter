@@ -1,10 +1,9 @@
 package me.shreyasr.starfighter
 
 import com.badlogic.ashley.core.Engine
-import com.badlogic.gdx.utils.Base64Coder
 import me.shreyasr.starfighter.event.{EntityCreateEvent, Event, EventQueue}
-import me.shreyasr.starfighter.systems.{VelocityUpdateSystem, EventQueueUpdateSystem}
-import me.shreyasr.starfighter.util.KryoManager
+import me.shreyasr.starfighter.systems.{EventQueueUpdateSystem, VelocityUpdateSystem}
+import me.shreyasr.starfighter.util.JsonSerializer
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 import org.java_websocket.server.WebSocketServer
@@ -35,15 +34,13 @@ class GameServer extends WebSocketServer {
   }
 
   def sendDataToNewClient(conn: WebSocket): Unit = {
-    engine.getEntities.foreach(e =>
-      conn.send(new String(Base64Coder.encode(KryoManager.encode(new EntityCreateEvent(0, e))))))
-
-//    eventQueue.getAllEvents.foreach(e =>
-//      conn.send(new String(Base64Coder.encode(KryoManager.encode(e)))))
+    engine.getEntities
+      .map(new EntityCreateEvent(0, _))
+      .map(JsonSerializer.encode)
+      .foreach(conn.send)
 
     eventQueue.getAllEvents
-      .map(KryoManager.encode)
-      .map(Base64Coder.encode)
+      .map(JsonSerializer.encode)
       .map(new String(_))
       .foreach(conn.send)
   }
@@ -56,7 +53,7 @@ class GameServer extends WebSocketServer {
     println("received message from " + conn.getRemoteSocketAddress)
     connections.filter(_ != conn).foreach(_.send(message))
 
-    handleObject(KryoManager.decode(Base64Coder.decode(message)))
+    handleObject(JsonSerializer.decode(message))
   }
 
   override def onClose(conn: WebSocket, code: Int, reason: String, remote: Boolean): Unit = {

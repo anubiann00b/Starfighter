@@ -17,7 +17,7 @@ public class EventResolutionData {
         idEntities = engine.getEntitiesFor(Family.all(IdComponent.class).get());
     }
 
-    public Entity getEntityById(long id) {
+    public Entity getEntityById(double id) {
         for (Entity e : idEntities) {
             if (e.getComponent(IdComponent.class).id == id) {
                 return e;

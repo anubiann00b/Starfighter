@@ -1,12 +1,10 @@
 package me.shreyasr.starfighter.systems;
 
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.gdx.utils.Base64Coder;
 
-import me.shreyasr.starfighter.event.Event;
 import me.shreyasr.starfighter.event.EventQueue;
 import me.shreyasr.starfighter.network.AccumulatingWebSocketListener;
-import me.shreyasr.starfighter.util.KryoManager;
+import me.shreyasr.starfighter.util.JsonSerializer;
 
 public class EventQueueNetworkPopulator extends EntitySystem {
 
@@ -24,8 +22,7 @@ public class EventQueueNetworkPopulator extends EntitySystem {
     public void update(float deltaTime) {
         String message;
         while ((message = webSocketListener.popMessage()) != null) {
-            Object o = KryoManager.decode(Base64Coder.decode(message));
-            if (o instanceof Event) eventQueue.addEvent((Event)o, true);
+            eventQueue.addEvent(JsonSerializer.decode(message), true);
         }
     }
 }

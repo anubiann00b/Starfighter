@@ -89,7 +89,7 @@ public class MyShipMovementSystem extends PlayerSystem {
         currentMoveEvent = null;
     }
 
-    private void addMovementEvent(long id, double acceleration) {
+    private void addMovementEvent(double id, double acceleration) {
         currentMoveEvent = new MovementEvent(System.currentTimeMillis()+100, id, acceleration);
         eventQueue.addEvent(currentMoveEvent);
     }
@@ -99,7 +99,7 @@ public class MyShipMovementSystem extends PlayerSystem {
         currentTurnEvent = null;
     }
 
-    private void addTurnEvent(long id, double acceleration) {
+    private void addTurnEvent(double id, double acceleration) {
         currentTurnEvent = new TurnEvent(System.currentTimeMillis()+100, id, acceleration);
         eventQueue.addEvent(currentTurnEvent);
     }

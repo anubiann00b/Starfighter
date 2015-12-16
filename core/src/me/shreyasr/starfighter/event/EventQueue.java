@@ -55,17 +55,17 @@ public class EventQueue {
         return events.toArray(new Event[0]);
     }
 
-    private Set<Long> eventsToCancel = new HashSet<Long>();
+    private Set<Double> eventsToCancel = new HashSet<Double>();
 
     public void resolveEventsTo(long time) {
-        for (Iterator<Event> iter = events.descendingIterator(); iter.hasNext(); ) {
+        for (Iterator<Event> iter = events.iterator(); iter.hasNext(); ) {
             Event e = iter.next();
             if (eventsToCancel.contains(e.id)) {
                 iter.remove();
             } else if(e.startMillis <= time) {
                 boolean keep = e.resolve(data, new EventCanceler() {
                     @Override
-                    public void cancelEvent(long id) {
+                    public void cancelEvent(double id) {
                         eventsToCancel.add(id);
                     }
                 });
@@ -75,7 +75,7 @@ public class EventQueue {
     }
 
     interface EventCanceler {
-        void cancelEvent(long id);
+        void cancelEvent(double id);
     }
 
     interface EventListener {

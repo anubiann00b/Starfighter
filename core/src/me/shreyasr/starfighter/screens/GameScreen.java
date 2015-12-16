@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import me.shreyasr.starfighter.StarfighterGame;
@@ -26,7 +25,7 @@ import me.shreyasr.starfighter.systems.render.PreBatchRenderSystem;
 import me.shreyasr.starfighter.systems.render.PreShapeRenderSystem;
 import me.shreyasr.starfighter.systems.render.SetProjectionMatrixSystem;
 import me.shreyasr.starfighter.util.EntityFactory;
-import me.shreyasr.starfighter.util.KryoManager;
+import me.shreyasr.starfighter.util.JsonSerializer;
 
 public class GameScreen extends ScreenAdapter {
 
@@ -72,8 +71,7 @@ public class GameScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(inputMultiplexer);
         inputMultiplexer.addProcessor(engine.getSystem(MyShipMovementSystem.class).input);
 
-        game.webSocketSender.send(new String(
-                Base64Coder.encode(KryoManager.encode(new EntityCreateEvent(0, player)))));
+        game.webSocketSender.send(JsonSerializer.encode(new EntityCreateEvent(0, player)));
 
         initialized = true;
     }

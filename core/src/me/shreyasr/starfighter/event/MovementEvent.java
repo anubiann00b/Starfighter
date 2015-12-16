@@ -6,12 +6,12 @@ import me.shreyasr.starfighter.components.VelComponent;
 
 public class MovementEvent extends Event {
 
-    private long targetId;
+    private double targetId;
     public double acceleration;
 
-    protected MovementEvent() { }
+    public MovementEvent() { }
 
-    public MovementEvent(long startMillis, long targetId, double acceleration) {
+    public MovementEvent(double startMillis, double targetId, double acceleration) {
         super(startMillis);
         this.targetId = targetId;
         this.acceleration = acceleration;

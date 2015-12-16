@@ -1,8 +1,5 @@
 package me.shreyasr.starfighter.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
-import java.nio.charset.Charset;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -17,10 +14,7 @@ public class Log {
     }
 
     public static void e(Throwable e) {
-        ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-        e.printStackTrace(new PrintWriter(byteOutputStream));
-        String stackTrace = new String(byteOutputStream.toByteArray(), Charset.forName("UTF-8"));
-        e(stackTrace);
+        e(e.toString());
     }
 
     public static void i(String msg) {

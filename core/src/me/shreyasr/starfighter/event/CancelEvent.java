@@ -2,18 +2,18 @@ package me.shreyasr.starfighter.event;
 
 public class CancelEvent extends Event {
 
-    private long id;
+    private double cancelId;
 
-    protected CancelEvent() { }
+    public CancelEvent() { }
 
-    public CancelEvent(long startTime, long id) {
+    public CancelEvent(double startTime, double cancelId) {
         super(startTime);
-        this.id = id;
+        this.cancelId = cancelId;
     }
 
     @Override
     public boolean resolve(EventResolutionData data, EventQueue.EventCanceler eventCanceler) {
-        eventCanceler.cancelEvent(id);
+        eventCanceler.cancelEvent(cancelId);
         return false;
     }
 }

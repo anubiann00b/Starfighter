@@ -1,19 +1,19 @@
 package me.shreyasr.starfighter.event;
 
-import java.security.SecureRandom;
+import java.util.Random;
 
-public abstract class Event implements Comparable<Event> {
+public class Event implements Comparable<Event> {
 
-    private static SecureRandom random = new SecureRandom();
+    private static Random random = new Random();
 
-    public long startMillis;
-    public long id;
+    public double startMillis;
+    public double id;
 
-    protected Event() { } // For serialization
+    public Event() { } // For serialization
 
-    public Event(long startMillis) {
+    public Event(double startMillis) {
         this.startMillis = startMillis;
-        id = random.nextLong();
+        id = random.nextDouble();
     }
 
     // return true to keep in queue
@@ -27,7 +27,7 @@ public abstract class Event implements Comparable<Event> {
 
     @Override
     public int compareTo(Event o) {
-        if (o == null) return 1;
-        return Long.compare(startMillis, o.startMillis);
+        if (o == null) return -1;
+        return -Double.compare(startMillis, o.startMillis);
     }
 }
