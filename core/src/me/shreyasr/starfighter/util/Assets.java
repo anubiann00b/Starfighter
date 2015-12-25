@@ -6,7 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 public enum Assets {
 
     FIGHTER (Texture.class, "fighter.png"),
-    SPACE   (Texture.class, "space.png");
+    SPACE   (Texture.class, "space.png"),
+    LASER   (Texture.class, "laser_blue.png");
 
     private final Class type;
     private final String file;

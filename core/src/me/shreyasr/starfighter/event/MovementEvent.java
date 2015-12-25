@@ -7,21 +7,32 @@ import me.shreyasr.starfighter.components.VelComponent;
 public class MovementEvent extends Event {
 
     private double targetId;
-    public double acceleration;
+    public double accel;
+    private double cancelId;
 
     public MovementEvent() { }
 
-    public MovementEvent(double startMillis, double targetId, double acceleration) {
+    public MovementEvent(double startMillis, double targetId, double accel) {
+        this(startMillis, targetId, accel, -1);
+    }
+    public MovementEvent(double startMillis, double targetId, double accel, double cancelId) {
         super(startMillis);
         this.targetId = targetId;
-        this.acceleration = acceleration;
+        this.accel = accel;
+        this.cancelId = cancelId;
     }
 
     @Override
-    public boolean resolve(EventResolutionData data) {
+    public boolean resolve(EventResolutionData data, EventQueue.EventQueueUpdater queueUpdater) {
+        queueUpdater.cancelEvent(cancelId);
         Entity target = data.getEntityById(targetId);
 
-        if (target != null) target.getComponent(VelComponent.class).velocity += acceleration;
+        if (target != null) target.getComponent(VelComponent.class).speed += accel;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " accel: " + accel;
     }
 }

@@ -29,7 +29,7 @@ public class DesktopLauncher {
 				try {
                     webSocketClient.send(messageBase64);
                 } catch (WebsocketNotConnectedException e) {
-                    System.out.println(e);
+                    Log.v(e);
                 }
 			}
 		});

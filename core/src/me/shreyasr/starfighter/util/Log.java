@@ -13,12 +13,24 @@ public class Log {
         logger.log(Level.SEVERE, msg);
     }
 
-    public static void e(Throwable e) {
-        e(e.toString());
-    }
-
     public static void i(String msg) {
         logger.log(Level.INFO, msg);
+    }
+
+    public static void v(String msg) {
+        logger.log(Level.FINE, msg);
+    }
+
+    public static void e(Throwable ex) {
+        e(ex.toString());
+    }
+
+    public static void i(Throwable ex) {
+        i(ex.toString());
+    }
+
+    public static void v(Throwable ex) {
+        v(ex.toString());
     }
 
     public static void setConsoleHandler() {

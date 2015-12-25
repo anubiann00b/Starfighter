@@ -18,10 +18,10 @@ class GameServer extends WebSocketServer {
   def runEngine(): Unit = {
     engine.addSystem(new VelocityUpdateSystem   (1))
     engine.addSystem(new EventQueueUpdateSystem (2, eventQueue))
-    var lastUpdateTime = System.currentTimeMillis()
+    var lastUpdateTime = System.nanoTime()
     while(true) {
-      engine.update(System.currentTimeMillis() - lastUpdateTime)
-      lastUpdateTime = System.currentTimeMillis()
+      engine.update((System.nanoTime() - lastUpdateTime)/1000000f)
+      lastUpdateTime = System.nanoTime()
       Thread.sleep(16)
     }
   }

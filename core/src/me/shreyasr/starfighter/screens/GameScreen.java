@@ -15,7 +15,8 @@ import me.shreyasr.starfighter.systems.CameraUpdateSystem;
 import me.shreyasr.starfighter.systems.EventQueueNetworkPopulator;
 import me.shreyasr.starfighter.systems.EventQueueNetworkSender;
 import me.shreyasr.starfighter.systems.EventQueueUpdateSystem;
-import me.shreyasr.starfighter.systems.MyShipMovementSystem;
+import me.shreyasr.starfighter.systems.MyShipInputUpdateSystem;
+import me.shreyasr.starfighter.systems.ProjectileUpdateSystem;
 import me.shreyasr.starfighter.systems.ShipGraphicsUpdateSystem;
 import me.shreyasr.starfighter.systems.VelocityUpdateSystem;
 import me.shreyasr.starfighter.systems.render.BackgroundRenderSystem;
@@ -35,6 +36,9 @@ public class GameScreen extends ScreenAdapter {
     private EventQueue eventQueue;
     private boolean initialized = false;
 
+    private int sectorWidth = 4096;
+    private int sectorHeight = 4096;
+
     public GameScreen(StarfighterGame game) {
         this.game = game;
     }
@@ -52,14 +56,15 @@ public class GameScreen extends ScreenAdapter {
 
         int priority = 0;
         // @formatter:off
-        engine.addSystem(new MyShipMovementSystem       (++priority, eventQueue));
+        engine.addSystem(new MyShipInputUpdateSystem    (++priority, eventQueue));
+        engine.addSystem(new ProjectileUpdateSystem     (++priority));
         engine.addSystem(new VelocityUpdateSystem       (++priority));
         engine.addSystem(new ShipGraphicsUpdateSystem   (++priority));
         engine.addSystem(new EventQueueNetworkSender    (++priority, game.webSocketSender, eventQueue));
         engine.addSystem(new EventQueueNetworkPopulator (++priority, game.webSocketListener, eventQueue));
         engine.addSystem(new EventQueueUpdateSystem     (++priority, eventQueue));
 
-        engine.addSystem(new CameraUpdateSystem        (++priority, game, camera, viewport));
+        engine.addSystem(new CameraUpdateSystem        (++priority, game, camera, viewport, sectorWidth, sectorHeight));
         engine.addSystem(new PreBatchRenderSystem      (++priority, game, camera));
         engine.addSystem(new    BackgroundRenderSystem (++priority, game));
         engine.addSystem(new SetProjectionMatrixSystem (++priority, game, camera));
@@ -69,7 +74,7 @@ public class GameScreen extends ScreenAdapter {
         // @formatter:on
 
         Gdx.input.setInputProcessor(inputMultiplexer);
-        inputMultiplexer.addProcessor(engine.getSystem(MyShipMovementSystem.class).input);
+        inputMultiplexer.addProcessor(engine.getSystem(MyShipInputUpdateSystem.class).input);
 
         game.webSocketSender.send(JsonSerializer.encode(new EntityCreateEvent(0, player)));
 

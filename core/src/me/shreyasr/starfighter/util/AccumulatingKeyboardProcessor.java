@@ -16,8 +16,12 @@ public class AccumulatingKeyboardProcessor implements InputProcessor {
         return pressed[keycode];
     }
 
-    public boolean isKeyJustPressed(int keycode) {
-        return justPressed[keycode];
+    public boolean isKeyPressedFirstTime(int keycode) {
+        if (justPressed[keycode]) {
+            justPressed[keycode] = false;
+            return true;
+        }
+        return false;
     }
 
     public AccumulatingKeyboardProcessor(Integer... keys) {

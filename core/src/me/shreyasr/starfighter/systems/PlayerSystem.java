@@ -17,6 +17,11 @@ public abstract class PlayerSystem extends EntitySystem {
 
     public void addedToEngine(Engine engine) {
         player = engine.getEntitiesFor(Family.all(TypeComponent.MyPlayer.class).get()).first();
+        init(player);
+    }
+
+    public void init(Entity player) {
+
     }
 
     @Override

@@ -17,14 +17,19 @@ public class CameraUpdateSystem extends EntitySystem {
     private final StarfighterGame game;
     private final OrthographicCamera camera;
     private final Viewport viewport;
+    private final int worldWidth;
+    private final int worldHeight;
     private Entity player;
 
     public CameraUpdateSystem(int priority, StarfighterGame game,
-                              OrthographicCamera camera, Viewport viewport) {
+                              OrthographicCamera camera, Viewport viewport,
+                              int worldWidth, int worldHeight) {
         super(priority);
         this.game = game;
         this.camera = camera;
         this.viewport = viewport;
+        this.worldWidth = worldWidth;
+        this.worldHeight = worldHeight;
     }
 
     public void addedToEngine(Engine engine) {
@@ -35,8 +40,10 @@ public class CameraUpdateSystem extends EntitySystem {
     public void update(float deltaTime) {
         PosComponent pos = player.getComponent(PosComponent.class);
         camera.position.set(
-                MathHelper.clamp(viewport.getWorldWidth() /2, pos.x, 4096-viewport.getWorldWidth() /2),
-                MathHelper.clamp(viewport.getWorldHeight()/2, pos.y, 4096-viewport.getWorldHeight()/2),
+                MathHelper.clamp(viewport.getWorldWidth()/2, pos.x,
+                        worldWidth-viewport.getWorldWidth() /2),
+                MathHelper.clamp(viewport.getWorldHeight()/2, pos.y,
+                        worldHeight-viewport.getWorldHeight()/2),
                 0);
         viewport.apply();
         camera.update();
