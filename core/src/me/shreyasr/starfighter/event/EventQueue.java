@@ -67,15 +67,23 @@ public class EventQueue {
     private Set<Double> eventsToCancel = new HashSet<Double>();
     private List<Event> eventsToAdd = new ArrayList<Event>();
 
-    public void resolveEventsTo(long time) {
-        eventsToAdd.clear();
+    public void resolveEvents(double from, double to) {
+        System.out.println("From=to : " + (to-from));
+        double time = from;
+        while (time <= to) {
+            resolveEvents(time);
+            time += 16;
+        }
+    }
+
+    public void resolveEvents(double time) {
         Collections.sort(events);
         for (Iterator<Event> iter = events.iterator(); iter.hasNext(); ) {
             Event e = iter.next();
             if (eventsToCancel.contains(e.id)) {
                 iter.remove();
                 eventsToCancel.remove(e.id);
-            } else if(e.startMillis <= time) {
+            } else if (e.startMillis <= time) {
                 boolean keep = e.resolve(data, new EventQueueUpdater() {
                     @Override
                     public void addEvent(Event e) {
@@ -95,6 +103,11 @@ public class EventQueue {
         for (Event e : eventsToAdd) {
             forceAdd(e);
         }
+        eventsToAdd.clear();
+    }
+
+    public void removeAllEvents() {
+        events.clear();
     }
 
     interface EventQueueUpdater {

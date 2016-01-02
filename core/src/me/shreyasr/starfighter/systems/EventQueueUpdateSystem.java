@@ -15,6 +15,6 @@ public class EventQueueUpdateSystem extends EntitySystem {
 
     @Override
     public void update(float deltaTime) {
-        eventQueue.resolveEventsTo(System.currentTimeMillis());
+        eventQueue.resolveEvents(System.currentTimeMillis());
     }
 }

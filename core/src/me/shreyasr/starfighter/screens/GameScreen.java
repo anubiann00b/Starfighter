@@ -57,12 +57,14 @@ public class GameScreen extends ScreenAdapter {
         int priority = 0;
         // @formatter:off
         engine.addSystem(new MyShipInputUpdateSystem    (++priority, eventQueue));
-        engine.addSystem(new ProjectileUpdateSystem     (++priority));
-        engine.addSystem(new VelocityUpdateSystem       (++priority));
-        engine.addSystem(new ShipGraphicsUpdateSystem   (++priority));
+
         engine.addSystem(new EventQueueNetworkSender    (++priority, game.webSocketSender, eventQueue));
         engine.addSystem(new EventQueueNetworkPopulator (++priority, game.webSocketListener, eventQueue));
         engine.addSystem(new EventQueueUpdateSystem     (++priority, eventQueue));
+
+        engine.addSystem(new ProjectileUpdateSystem     (++priority));
+        engine.addSystem(new VelocityUpdateSystem       (++priority));
+        engine.addSystem(new ShipGraphicsUpdateSystem   (++priority));
 
         engine.addSystem(new CameraUpdateSystem        (++priority, game, camera, viewport, sectorWidth, sectorHeight));
         engine.addSystem(new PreBatchRenderSystem      (++priority, game, camera));

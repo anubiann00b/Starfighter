@@ -13,4 +13,12 @@ public class VelComponent implements Component {
 
     public float dir;
     public float speed;
+
+    @Override
+    public String toString() {
+        return "VelComponent{" +
+                "dir=" + dir +
+                ", speed=" + speed +
+                '}';
+    }
 }
