@@ -17,7 +17,7 @@ import me.shreyasr.starfighter.util.Log;
 
 public class DesktopLauncher {
 
-	public static void main(String[] arg) throws URISyntaxException {
+	public static void main(String[] args) throws URISyntaxException {
         Log.setConsoleHandler();
 
         final ForwardingWebSocketClient webSocketClient
@@ -38,6 +38,8 @@ public class DesktopLauncher {
 		webSocketClient.connect();
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.x = Integer.parseInt(args[0]);
+		config.y = Integer.parseInt(args[1]);
 		new LwjglApplication(game, config);
 	}
 

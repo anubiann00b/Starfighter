@@ -84,7 +84,7 @@ public class MyShipInputUpdateSystem extends PlayerSystem {
 
         if (input.isKeyPressedFirstTime(Input.Keys.SPACE)) {
             double laserTime = Time.getMillis()+OFFSET_MS;
-            Entity laser = EntityFactory.createLaser(pos.x, pos.y, vel.dir, 3, laserTime);
+            Entity laser = EntityFactory.createLaser(id, 3, laserTime);
             eventQueue.addEvent(new EntityCreateEvent(laserTime, laser));
         }
     }

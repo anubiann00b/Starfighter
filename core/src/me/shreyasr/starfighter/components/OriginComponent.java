@@ -16,4 +16,5 @@ public class OriginComponent implements Component {
     public float y;
 
     public double time;
+    public boolean updated = false;
 }

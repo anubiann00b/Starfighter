@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 
 import me.shreyasr.starfighter.components.IdComponent;
 import me.shreyasr.starfighter.components.OriginComponent;
+import me.shreyasr.starfighter.components.OwnerComponent;
 import me.shreyasr.starfighter.components.PosComponent;
 import me.shreyasr.starfighter.components.TextureComponent;
 import me.shreyasr.starfighter.components.TextureTransformComponent;
@@ -34,7 +35,7 @@ public class EntityFactory {
         return e;
     }
 
-    public static Entity createLaser(float x, float y, float dir, float speed, double time) {
+    public static Entity createLaser(IdComponent owner, float speed, double time) {
         Entity e = new Entity();
 
         TextureComponent tex = new TextureComponent();
@@ -43,8 +44,9 @@ public class EntityFactory {
 
         e.add(TextureTransformComponent.create(15, 460, 0.25f));
         e.add(new PosComponent());
-        e.add(VelComponent.create(dir, speed));
-        e.add(OriginComponent.create(x, y, time));
+        e.add(OwnerComponent.create(owner));
+        e.add(VelComponent.create(0, speed));
+        e.add(OriginComponent.create(-1, -1, time));
         e.add(IdComponent.create());
         e.add(new TypeComponent.Projectile());
 
