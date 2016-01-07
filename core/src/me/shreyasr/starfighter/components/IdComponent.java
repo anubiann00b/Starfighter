@@ -8,13 +8,11 @@ public class IdComponent implements Component {
 
     private static Random random = new Random();
 
-    public static IdComponent create() {
-        IdComponent id = new IdComponent();
-        id.id = random.nextDouble();
-        return id;
-    }
-
     public double id;
+
+    public IdComponent() {
+        this.id = random.nextDouble();
+    }
 
     @Override
     public boolean equals(Object o) {

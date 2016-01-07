@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 
 import me.shreyasr.starfighter.components.IdComponent;
 import me.shreyasr.starfighter.components.PosComponent;
+import me.shreyasr.starfighter.components.ShipStatsComponent;
 import me.shreyasr.starfighter.components.VelComponent;
 import me.shreyasr.starfighter.event.EntityCreateEvent;
 import me.shreyasr.starfighter.event.EventQueue;
@@ -41,6 +42,7 @@ public class MyShipInputUpdateSystem extends PlayerSystem {
     public void updatePlayer(Entity player, float deltaTime) {
         PosComponent pos = player.getComponent(PosComponent.class);
         VelComponent vel = player.getComponent(VelComponent.class);
+        ShipStatsComponent stats = player.getComponent(ShipStatsComponent.class);
         IdComponent id = player.getComponent(IdComponent.class);
 
         boolean up = input.isKeyPressed(Input.Keys.UP);
@@ -50,9 +52,9 @@ public class MyShipInputUpdateSystem extends PlayerSystem {
         if (up && down) {
             accel = 0;
         } else if (up) {
-            accel = .2;
+            accel = stats.accel;
         } else if (down) {
-            accel = -.2;
+            accel = -stats.accel;
         } else {
             accel = 0;
         }
@@ -69,9 +71,9 @@ public class MyShipInputUpdateSystem extends PlayerSystem {
         if (left && right) {
             accel = 0;
         } else if (left) {
-            accel = 0.03;
+            accel = stats.turn;
         } else if (right) {
-            accel = -0.03;
+            accel = -stats.turn;
         } else {
             accel = 0;
         }

@@ -4,15 +4,17 @@ import com.badlogic.ashley.core.Component;
 
 public class VelComponent implements Component {
 
-    public static Component create(float dir, float speed) {
-        VelComponent c = new VelComponent();
-        c.dir = dir;
-        c.speed = speed;
-        return c;
+    public double dir;
+    public double speed;
+
+    public VelComponent() {
+
     }
 
-    public float dir;
-    public float speed;
+    public VelComponent(float dir, float speed) {
+        this.dir = dir;
+        this.speed = speed;
+    }
 
     @Override
     public String toString() {

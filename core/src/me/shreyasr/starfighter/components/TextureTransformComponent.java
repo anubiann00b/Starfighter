@@ -5,17 +5,6 @@ import com.badlogic.gdx.graphics.Color;
 
 public class TextureTransformComponent implements Component {
 
-    public static TextureTransformComponent create(int width, int height, float scale) {
-        TextureTransformComponent ttc = new TextureTransformComponent();
-        ttc.srcWidth = width;
-        ttc.srcHeight = height;
-        ttc.screenWidth = Math.round(width*scale);
-        ttc.screenHeight = Math.round(height*scale);
-        ttc.originX = ttc.screenWidth/2;
-        ttc.originY = ttc.screenHeight/2;
-        return ttc;
-    }
-
     public int screenWidth;
     public int screenHeight;
 
@@ -26,10 +15,22 @@ public class TextureTransformComponent implements Component {
     public int srcY;
     public int srcWidth;
     public int srcHeight;
-
     public float rotation;
 
     public boolean hide;
 
     public Color color = Color.WHITE;
+
+    public TextureTransformComponent() {
+
+    }
+
+    public TextureTransformComponent(int width, int height, float scale) {
+        this.srcWidth = width;
+        this.srcHeight = height;
+        this.screenWidth = Math.round(width*scale);
+        this.screenHeight = Math.round(height*scale);
+        this.originX = this.screenWidth/2;
+        this.originY = this.screenHeight/2;
+    }
 }

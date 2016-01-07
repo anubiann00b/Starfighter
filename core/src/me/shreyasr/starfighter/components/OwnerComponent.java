@@ -6,9 +6,11 @@ public class OwnerComponent implements Component {
 
     public IdComponent id;
 
-    public static OwnerComponent create(IdComponent owner) {
-        OwnerComponent id = new OwnerComponent();
-        id.id = owner;
-        return id;
+    public OwnerComponent() {
+
+    }
+
+    public OwnerComponent(IdComponent owner) {
+        this.id = owner;
     }
 }

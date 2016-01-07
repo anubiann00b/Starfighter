@@ -6,6 +6,8 @@ import me.shreyasr.starfighter.components.IdComponent;
 import me.shreyasr.starfighter.components.OriginComponent;
 import me.shreyasr.starfighter.components.OwnerComponent;
 import me.shreyasr.starfighter.components.PosComponent;
+import me.shreyasr.starfighter.components.ShieldsComponent;
+import me.shreyasr.starfighter.components.ShipStatsComponent;
 import me.shreyasr.starfighter.components.TextureComponent;
 import me.shreyasr.starfighter.components.TextureTransformComponent;
 import me.shreyasr.starfighter.components.TypeComponent;
@@ -26,10 +28,12 @@ public class EntityFactory {
         tex.file = Assets.FIGHTER.getFile();
         e.add(tex);
 
-        e.add(TextureTransformComponent.create(95, 141, 0.75f));
+        e.add(new ShipStatsComponent(0.05, 0.3, 10, 100));
+        e.add(new ShieldsComponent(100));
+        e.add(new TextureTransformComponent(95, 141, 0.75f));
         e.add(new PosComponent());
         e.add(new VelComponent());
-        e.add(IdComponent.create());
+        e.add(new IdComponent());
         e.add(new TypeComponent.Ship());
 
         return e;
@@ -42,12 +46,12 @@ public class EntityFactory {
         tex.file = Assets.LASER.getFile();
         e.add(tex);
 
-        e.add(TextureTransformComponent.create(15, 460, 0.25f));
+        e.add(new TextureTransformComponent(15, 460, 0.25f));
         e.add(new PosComponent());
-        e.add(OwnerComponent.create(owner));
-        e.add(VelComponent.create(0, speed));
-        e.add(OriginComponent.create(-1, -1, time));
-        e.add(IdComponent.create());
+        e.add(new OwnerComponent(owner));
+        e.add(new VelComponent(0, speed));
+        e.add(new OriginComponent(-1, -1, time));
+        e.add(new IdComponent());
         e.add(new TypeComponent.Projectile());
 
         return e;

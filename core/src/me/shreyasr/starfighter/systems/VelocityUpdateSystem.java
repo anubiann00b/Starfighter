@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 
 import me.shreyasr.starfighter.components.PosComponent;
+import me.shreyasr.starfighter.components.ShipStatsComponent;
 import me.shreyasr.starfighter.components.VelComponent;
 
 public class VelocityUpdateSystem extends IteratingSystem {
@@ -17,6 +18,11 @@ public class VelocityUpdateSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         VelComponent vel = entity.getComponent(VelComponent.class);
         PosComponent pos = entity.getComponent(PosComponent.class);
+        ShipStatsComponent stats = entity.getComponent(ShipStatsComponent.class);
+
+        if (stats != null && Math.abs(vel.speed) > stats.maxSpeed) {
+            vel.speed = stats.maxSpeed * Math.signum(vel.speed);
+        }
 
         pos.x += vel.speed * Math.cos(vel.dir) * 16/deltaTime;
         pos.y += vel.speed * Math.sin(vel.dir) * 16/deltaTime;
