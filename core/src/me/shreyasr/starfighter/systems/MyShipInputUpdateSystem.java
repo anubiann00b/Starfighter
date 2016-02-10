@@ -7,6 +7,7 @@ import me.shreyasr.starfighter.components.IdComponent;
 import me.shreyasr.starfighter.components.PosComponent;
 import me.shreyasr.starfighter.components.ShipStatsComponent;
 import me.shreyasr.starfighter.components.VelComponent;
+import me.shreyasr.starfighter.event.DisableEvent;
 import me.shreyasr.starfighter.event.EntityCreateEvent;
 import me.shreyasr.starfighter.event.EventQueue;
 import me.shreyasr.starfighter.event.MovementEvent;
@@ -24,18 +25,14 @@ public class MyShipInputUpdateSystem extends PlayerSystem {
     );
 
     private final EventQueue eventQueue;
-    private TurnEvent turnEvent;
-    private MovementEvent moveEvent;
+    double lastMoveAccel = 0;
+    double lastTurnAccel = 0;
+    double lastMoveId = -1;
+    double lastTurnId = -1;
 
     public MyShipInputUpdateSystem(int priority, EventQueue eventQueue) {
         super(priority);
         this.eventQueue = eventQueue;
-    }
-
-    @Override
-    public void init(Entity player) {
-        moveEvent = new MovementEvent(0, player.getComponent(IdComponent.class).id, 0);
-        turnEvent = new TurnEvent(0, player.getComponent(IdComponent.class).id, 0);
     }
 
     @Override
@@ -58,11 +55,18 @@ public class MyShipInputUpdateSystem extends PlayerSystem {
         } else {
             accel = 0;
         }
-        if (accel != moveEvent.accel) {
-            double oldId = moveEvent.id;
-            moveEvent = new MovementEvent(Time.getMillis() + OFFSET_MS, id.id, accel);
-            moveEvent.id = oldId;
-            eventQueue.addEvent(moveEvent);
+        if (accel != lastMoveAccel) {
+            lastMoveAccel = accel;
+            if (lastMoveId >= 0) {
+                eventQueue.addEvent(new DisableEvent(Time.getMillis() + OFFSET_MS, lastMoveId));
+            }
+            if (accel == 0) {
+                lastMoveId = -1;
+            } else {
+                MovementEvent newMoveEvent = new MovementEvent(Time.getMillis() + OFFSET_MS, id.id, accel);
+                lastMoveId = newMoveEvent.id;
+                eventQueue.addEvent(newMoveEvent);
+            }
         }
 
         boolean left = input.isKeyPressed(Input.Keys.LEFT);
@@ -77,11 +81,18 @@ public class MyShipInputUpdateSystem extends PlayerSystem {
         } else {
             accel = 0;
         }
-        if (accel != turnEvent.accel) {
-            double oldId = turnEvent.id;
-            turnEvent = new TurnEvent(Time.getMillis()+OFFSET_MS, id.id, accel);
-            turnEvent.id = oldId;
-            eventQueue.addEvent(turnEvent);
+        if (accel != lastTurnAccel) {
+            if (lastTurnId >= 0) {
+                eventQueue.addEvent(new DisableEvent(Time.getMillis() + OFFSET_MS, lastTurnId));
+            }
+            if (accel == 0) {
+                lastTurnId = -1;
+            } else {
+                TurnEvent newTurnEvent = new TurnEvent(Time.getMillis() + OFFSET_MS, id.id, accel);
+                lastTurnId = newTurnEvent.id;
+                eventQueue.addEvent(newTurnEvent);
+            }
+            lastTurnAccel = accel;
         }
 
         if (input.isKeyPressedFirstTime(Input.Keys.SPACE)) {

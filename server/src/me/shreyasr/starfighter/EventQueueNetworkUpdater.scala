@@ -12,8 +12,14 @@ class EventQueueNetworkUpdater(priority: Int, eventQueue: EventQueue, newEvents:
 
   override def update(deltaTime: Float): Unit = {
     newEvents.synchronized {
-      newEvents.foreach(eventQueue.addEvent)
-      newEvents.clear()
+      if (newEvents.size > 0) {
+        val oldestEvent = newEvents.reduce(
+          (x, y) => if (x.startMillis < y.startMillis) x else y).startMillis
+        newEvents.foreach(println)
+        eventQueue.setTime(oldestEvent)
+        newEvents.foreach(eventQueue.addSilent)
+        newEvents.clear()
+      }
     }
   }
 }

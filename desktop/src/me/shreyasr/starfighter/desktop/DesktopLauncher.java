@@ -38,8 +38,10 @@ public class DesktopLauncher {
 		webSocketClient.connect();
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.x = Integer.parseInt(args[0]);
-		config.y = Integer.parseInt(args[1]);
+		if (args.length == 2) {
+            config.x = Integer.parseInt(args[0]);
+            config.y = Integer.parseInt(args[1]);
+        }
 		new LwjglApplication(game, config);
 	}
 

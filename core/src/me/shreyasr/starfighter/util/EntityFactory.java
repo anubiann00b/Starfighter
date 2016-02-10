@@ -28,7 +28,7 @@ public class EntityFactory {
         tex.file = Assets.FIGHTER.getFile();
         e.add(tex);
 
-        e.add(new ShipStatsComponent(0.05, 0.3, 10, 100));
+        e.add(new ShipStatsComponent(0.03, 0.2, 10, 100));
         e.add(new ShieldsComponent(100));
         e.add(new TextureTransformComponent(95, 141, 0.75f));
         e.add(new PosComponent());

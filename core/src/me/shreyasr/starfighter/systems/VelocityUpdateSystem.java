@@ -24,7 +24,7 @@ public class VelocityUpdateSystem extends IteratingSystem {
             vel.speed = stats.maxSpeed * Math.signum(vel.speed);
         }
 
-        pos.x += vel.speed * Math.cos(vel.dir) * 16/deltaTime;
-        pos.y += vel.speed * Math.sin(vel.dir) * 16/deltaTime;
+        pos.x += vel.speed * Math.cos(vel.dir);
+        pos.y += vel.speed * Math.sin(vel.dir);
     }
 }

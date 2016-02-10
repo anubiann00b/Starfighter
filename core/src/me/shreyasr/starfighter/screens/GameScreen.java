@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import me.shreyasr.starfighter.StarfighterGame;
 import me.shreyasr.starfighter.event.EntityCreateEvent;
+import me.shreyasr.starfighter.event.Event;
 import me.shreyasr.starfighter.event.EventQueue;
 import me.shreyasr.starfighter.systems.CameraUpdateSystem;
 import me.shreyasr.starfighter.systems.EventQueueNetworkPopulator;
@@ -59,8 +60,8 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new MyShipInputUpdateSystem    (++priority, eventQueue));
 
         engine.addSystem(new EventQueueNetworkSender    (++priority, game.webSocketSender, eventQueue));
-        engine.addSystem(new EventQueueNetworkPopulator (++priority, game.webSocketListener, eventQueue));
         engine.addSystem(new EventQueueUpdateSystem     (++priority, eventQueue));
+        engine.addSystem(new EventQueueNetworkPopulator (++priority, game.webSocketListener, eventQueue));
 
         engine.addSystem(new ProjectileUpdateSystem     (++priority));
         engine.addSystem(new VelocityUpdateSystem       (++priority));
@@ -78,8 +79,13 @@ public class GameScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(inputMultiplexer);
         inputMultiplexer.addProcessor(engine.getSystem(MyShipInputUpdateSystem.class).input);
 
-        game.webSocketSender.send(JsonSerializer.encode(new EntityCreateEvent(0, player)));
+        Event entityCreateEvent = new EntityCreateEvent(System.currentTimeMillis(), player);
+        game.webSocketSender.send(JsonSerializer.encode(entityCreateEvent));
+        eventQueue.addSilent(entityCreateEvent);
 
+        System.out.println(entityCreateEvent);
+
+        eventQueue.setTime(System.currentTimeMillis());
         initialized = true;
     }
 

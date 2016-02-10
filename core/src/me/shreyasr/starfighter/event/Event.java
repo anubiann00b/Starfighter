@@ -1,28 +1,36 @@
 package me.shreyasr.starfighter.event;
 
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
+
 import java.util.Random;
 
-public class Event implements Comparable<Event> {
+public class Event implements Comparable<Event>, Json.Serializable {
 
     private static Random random = new Random();
 
-    public double startMillis;
     public double id;
+    public double startMillis;
+    public double endMillis;
+    public double disableMillis;
+    public boolean hasRunOnce = false;
 
     public Event() { } // For serialization
 
-    public Event(double startMillis) {
+    public Event(double startMillis, double endMillis) {
         this.startMillis = startMillis;
+        this.endMillis = endMillis;
+        this.disableMillis = endMillis;
         id = random.nextDouble();
     }
 
-    // return true to keep in queue
-    public boolean resolve(EventResolutionData data) {
-        return false;
+    public void resolve(EventResolutionData data, double timeMultiplier) {
+
     }
 
-    public boolean resolve(EventResolutionData data, EventQueue.EventQueueUpdater queueUpdater) {
-        return resolve(data);
+    public void resolve(EventResolutionData data, double timeMultiplier,
+                        EventQueue.EventQueueUpdater queueUpdater) {
+        resolve(data, timeMultiplier);
     }
 
     @Override
@@ -40,6 +48,25 @@ public class Event implements Comparable<Event> {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + ": " + ((long)startMillis)%10000 + " " + (int)(id*10000)%10000;
+        return this.getClass().getSimpleName() + ": "
+                + ((long)startMillis)%10000 + " "
+                + (int)(id*10000)%10000;
+    }
+
+    @Override
+    public void write(Json json) {
+        json.writeValue("id", id);
+        json.writeValue("sm", startMillis);
+        json.writeValue("em", endMillis);
+        json.writeValue("ds", disableMillis);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonData) {
+        id = jsonData.get("id").asDouble();
+        startMillis = jsonData.get("sm").asDouble();
+        endMillis = jsonData.get("em").asDouble();
+        disableMillis = jsonData.get("ds").asDouble();
+        hasRunOnce = false;
     }
 }

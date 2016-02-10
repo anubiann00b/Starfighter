@@ -1,6 +1,8 @@
 package me.shreyasr.starfighter.event;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 
 import me.shreyasr.starfighter.components.VelComponent;
 
@@ -8,31 +10,37 @@ public class MovementEvent extends Event {
 
     private double targetId;
     public double accel;
-    private double cancelId;
 
     public MovementEvent() { }
 
     public MovementEvent(double startMillis, double targetId, double accel) {
-        this(startMillis, targetId, accel, -1);
-    }
-    public MovementEvent(double startMillis, double targetId, double accel, double cancelId) {
-        super(startMillis);
+        super(startMillis, Double.MAX_VALUE);
         this.targetId = targetId;
         this.accel = accel;
-        this.cancelId = cancelId;
     }
 
     @Override
-    public boolean resolve(EventResolutionData data, EventQueue.EventQueueUpdater queueUpdater) {
-        queueUpdater.cancelEvent(cancelId);
+    public void resolve(EventResolutionData data, double timeMultiplier) {
         Entity target = data.getEntityById(targetId);
-
-        if (target != null) target.getComponent(VelComponent.class).speed += accel;
-        return true;
+        if (target != null) target.getComponent(VelComponent.class).speed += accel*timeMultiplier;
     }
 
     @Override
     public String toString() {
         return super.toString() + " accel: " + accel;
+    }
+
+    @Override
+    public void write(Json json) {
+        super.write(json);
+        json.writeValue("ti", targetId);
+        json.writeValue("ac", accel);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonData) {
+        super.read(json, jsonData);
+        targetId = jsonData.get("ti").asDouble();
+        accel = jsonData.get("ac").asDouble();
     }
 }

@@ -1,11 +1,7 @@
 package me.shreyasr.starfighter.systems;
 
-import com.badlogic.ashley.core.Component;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 
-import me.shreyasr.starfighter.components.IdComponent;
-import me.shreyasr.starfighter.components.VelComponent;
 import me.shreyasr.starfighter.event.Event;
 import me.shreyasr.starfighter.event.EventQueue;
 import me.shreyasr.starfighter.network.AccumulatingWebSocketListener;
@@ -30,34 +26,13 @@ public class EventQueueNetworkPopulator extends EntitySystem {
         while ((message = webSocketListener.popMessage()) != null) {
             Object obj = JsonSerializer.decode(message);
             if (obj instanceof Event) {
-                eventQueue.addEvent((Event)obj, true);
+                System.out.println("Event from Server: " + obj.toString());
+                eventQueue.addSilent((Event)obj);
             } else if (obj instanceof GameState) {
                 GameState gameState = (GameState) obj;
-                for (Entity newEntity : gameState.entities) {
-                    for (Entity oldEntity : getEngine().getEntities()) {
-                        IdComponent oldId = oldEntity.getComponent(IdComponent.class);
-                        IdComponent newId = newEntity.getComponent(IdComponent.class);
-                        if (oldId.equals(newId)) {
-                            for (Component c : newEntity.getComponents()) {
-                                if (c instanceof VelComponent) {
-                                    System.out.println(c);
-                                    System.out.println(oldEntity.getComponent(VelComponent.class));
-                                }
-                                oldEntity.add(c);
-                                if (c instanceof VelComponent) {
-                                    System.out.println(oldEntity.getComponent(VelComponent.class));
-                                }
-                            }
-                        } else {
-                            getEngine().addEntity(newEntity);
-                        }
-                    }
-                }
-                eventQueue.removeAllEvents();
-                for (Event e : gameState.events) {
-                    eventQueue.addEvent(e, true);
-                }
-                eventQueue.resolveEvents(gameState.time, System.currentTimeMillis()-deltaTime);
+                System.out.println("Game State: " + gameState.time%10000);
+                eventQueue.rollback(gameState);
+                eventQueue.resolveEvents(System.currentTimeMillis());
             }
         }
     }

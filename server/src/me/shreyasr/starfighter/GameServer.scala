@@ -22,15 +22,16 @@ class GameServer extends WebSocketServer {
   val newEvents = new ArrayList[Event]()
 
   def runEngine(): Unit = {
-    engine.addSystem(new VelocityUpdateSystem     (1))
+    eventQueue.setTime(System.currentTimeMillis())
+    engine.addSystem(new EventQueueUpdateSystem   (1, eventQueue))
     engine.addSystem(new EventQueueNetworkUpdater (2, eventQueue, newEvents))
-    engine.addSystem(new EventQueueUpdateSystem   (3, eventQueue))
+    engine.addSystem(new VelocityUpdateSystem     (3))
     engine.addSystem(new GameStateSendSystem      (4, 3000f, this))
 
-    var lastUpdateTime = System.nanoTime()
+    var lastUpdateTime = System.currentTimeMillis()
     while(true) {
-      engine.update((System.nanoTime() - lastUpdateTime)/1000000f)
-      lastUpdateTime = System.nanoTime()
+      engine.update((System.currentTimeMillis() - lastUpdateTime)/1000f)
+      lastUpdateTime = System.currentTimeMillis()
       Thread.sleep(16)
     }
   }
@@ -67,10 +68,12 @@ class GameServer extends WebSocketServer {
 
   override def onClose(conn: WebSocket, code: Int, reason: String, remote: Boolean): Unit = {
     println("closed " + conn.getRemoteSocketAddress + " with exit code " + code + " because: " + reason)
+    sys.exit(0)
   }
 
   override def onOpen(conn: WebSocket, handshake: ClientHandshake): Unit = {
     println("opened " + conn.getRemoteSocketAddress)
     sendGameState(conn)
+    addGameState()
   }
 }
