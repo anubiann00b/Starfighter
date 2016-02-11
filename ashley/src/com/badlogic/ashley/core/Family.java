@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2014 See AUTHORS file.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,169 +27,168 @@ import com.badlogic.gdx.utils.ObjectMap;
  * @author Stefan Bachmann
  */
 public class Family {
-	private static ObjectMap<String, Family> families = new ObjectMap<String, Family>();
-	private static int familyIndex = 0;
-	private static final Builder builder = new Builder();
-	private static final Bits zeroBits = new Bits();
+    private static final Builder builder = new Builder();
+    private static final Bits zeroBits = new Bits();
+    private static ObjectMap<String, Family> families = new ObjectMap<String, Family>();
+    private static int familyIndex = 0;
+    private final Bits all;
+    private final Bits one;
+    private final Bits exclude;
+    private final int index;
 
-	private final Bits all;
-	private final Bits one;
-	private final Bits exclude;
-	private final int index;
+    /** Private constructor, use static method Family.getFamilyFor() */
+    private Family(Bits all, Bits any, Bits exclude) {
+        this.all = all;
+        this.one = any;
+        this.exclude = exclude;
+        this.index = familyIndex++;
+    }
 
-	/** Private constructor, use static method Family.getFamilyFor() */
-	private Family (Bits all, Bits any, Bits exclude) {
-		this.all = all;
-		this.one = any;
-		this.exclude = exclude;
-		this.index = familyIndex++;
-	}
+    /**
+     * @param componentTypes entities will have to contain all of the specified components.
+     * @return A Builder singleton instance to get a family
+     */
+    @SafeVarargs
+    public static final Builder all(Class<? extends Component>... componentTypes) {
+        return builder.reset().all(componentTypes);
+    }
 
-	/** @return This family's unique index */
-	public int getIndex () {
-		return this.index;
-	}
+    /**
+     * @param componentTypes entities will have to contain at least one of the specified components.
+     * @return A Builder singleton instance to get a family
+     */
+    @SafeVarargs
+    public static final Builder one(Class<? extends Component>... componentTypes) {
+        return builder.reset().one(componentTypes);
+    }
 
-	/** @return Whether the entity matches the family requirements or not */
-	public boolean matches (Entity entity) {
-		Bits entityComponentBits = entity.getComponentBits();
+    /**
+     * @param componentTypes entities cannot contain any of the specified components.
+     * @return A Builder singleton instance to get a family
+     */
+    @SafeVarargs
+    public static final Builder exclude(Class<? extends Component>... componentTypes) {
+        return builder.reset().exclude(componentTypes);
+    }
 
-		if (!entityComponentBits.containsAll(all)) {
-			return false;
-		}
+    private static String getFamilyHash(Bits all, Bits one, Bits exclude) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (!all.isEmpty()) {
+            stringBuilder.append("{all:").append(getBitsString(all)).append("}");
+        }
+        if (!one.isEmpty()) {
+            stringBuilder.append("{one:").append(getBitsString(one)).append("}");
+        }
+        if (!exclude.isEmpty()) {
+            stringBuilder.append("{exclude:").append(getBitsString(exclude)).append("}");
+        }
+        return stringBuilder.toString();
+    }
 
-		if (!one.isEmpty() && !one.intersects(entityComponentBits)) {
-			return false;
-		}
+    private static String getBitsString(Bits bits) {
+        StringBuilder stringBuilder = new StringBuilder();
 
-		if (!exclude.isEmpty() && exclude.intersects(entityComponentBits)) {
-			return false;
-		}
+        int numBits = bits.length();
+        for (int i = 0; i < numBits; ++i) {
+            stringBuilder.append(bits.get(i) ? "1" : "0");
+        }
 
-		return true;
-	}
+        return stringBuilder.toString();
+    }
 
-	/**
-	 * @param componentTypes entities will have to contain all of the specified components.
-	 * @return A Builder singleton instance to get a family
-	 */
-	@SafeVarargs
-	public static final Builder all (Class<? extends Component>... componentTypes) {
-		return builder.reset().all(componentTypes);
-	}
+    /** @return This family's unique index */
+    public int getIndex() {
+        return this.index;
+    }
 
-	/**
-	 * @param componentTypes entities will have to contain at least one of the specified components.
-	 * @return A Builder singleton instance to get a family
-	 */
-	@SafeVarargs
-	public static final Builder one (Class<? extends Component>... componentTypes) {
-		return builder.reset().one(componentTypes);
-	}
+    /** @return Whether the entity matches the family requirements or not */
+    public boolean matches(Entity entity) {
+        Bits entityComponentBits = entity.getComponentBits();
 
-	/**
-	 * @param componentTypes entities cannot contain any of the specified components.
-	 * @return A Builder singleton instance to get a family
-	 */
-	@SafeVarargs
-	public static final Builder exclude (Class<? extends Component>... componentTypes) {
-		return builder.reset().exclude(componentTypes);
-	}
+        if (!entityComponentBits.containsAll(all)) {
+            return false;
+        }
 
-	public static class Builder {
-		private Bits all = zeroBits;
-		private Bits one = zeroBits;
-		private Bits exclude = zeroBits;
+        if (!one.isEmpty() && !one.intersects(entityComponentBits)) {
+            return false;
+        }
 
-		Builder() {
-			
-		}
-		
-		/**
-		 * Resets the builder instance
-		 * @return A Builder singleton instance to get a family
-		 */
-		public Builder reset () {
-			all = zeroBits;
-			one = zeroBits;
-			exclude = zeroBits;
-			return this;
-		}
+        if (!exclude.isEmpty() && exclude.intersects(entityComponentBits)) {
+            return false;
+        }
 
-		/**
-		 * @param componentTypes entities will have to contain all of the specified components.
-		 * @return A Builder singleton instance to get a family
-		 */
-		@SafeVarargs
-		public final Builder all (Class<? extends Component>... componentTypes) {
-			all = ComponentType.getBitsFor(componentTypes);
-			return this;
-		}
+        return true;
+    }
 
-		/**
-		 * @param componentTypes entities will have to contain at least one of the specified components.
-		 * @return A Builder singleton instance to get a family
-		 */
-		@SafeVarargs
-		public final Builder one (Class<? extends Component>... componentTypes) {
-			one = ComponentType.getBitsFor(componentTypes);
-			return this;
-		}
+    @Override
+    public int hashCode() {
+        return index;
+    }
 
-		/**
-		 * @param componentTypes entities cannot contain any of the specified components.
-		 * @return A Builder singleton instance to get a family
-		 */
-		@SafeVarargs
-		public final Builder exclude (Class<? extends Component>... componentTypes) {
-			exclude = ComponentType.getBitsFor(componentTypes);
-			return this;
-		}
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj;
+    }
 
-		/** @return A family for the configured component types */
-		public Family get () {
-			String hash = getFamilyHash(all, one, exclude);
-			Family family = families.get(hash, null);
-			if (family == null) {
-				family = new Family(all, one, exclude);
-				families.put(hash, family);
-			}
-			return family;
-		}
-	}
+    public static class Builder {
+        private Bits all = zeroBits;
+        private Bits one = zeroBits;
+        private Bits exclude = zeroBits;
 
-	@Override
-	public int hashCode () {
-		return index;
-	}
+        Builder() {
 
-	@Override
-	public boolean equals (Object obj) {
-		return this == obj;
-	}
+        }
 
-	private static String getFamilyHash (Bits all, Bits one, Bits exclude) {
-		StringBuilder stringBuilder = new StringBuilder();
-		if (!all.isEmpty()) {
-			stringBuilder.append("{all:").append(getBitsString(all)).append("}");
-		}
-		if (!one.isEmpty()) {
-			stringBuilder.append("{one:").append(getBitsString(one)).append("}");
-		}
-		if (!exclude.isEmpty()) {
-			stringBuilder.append("{exclude:").append(getBitsString(exclude)).append("}");
-		}
-		return stringBuilder.toString();
-	}
+        /**
+         * Resets the builder instance
+         * @return A Builder singleton instance to get a family
+         */
+        public Builder reset() {
+            all = zeroBits;
+            one = zeroBits;
+            exclude = zeroBits;
+            return this;
+        }
 
-	private static String getBitsString (Bits bits) {
-		StringBuilder stringBuilder = new StringBuilder();
+        /**
+         * @param componentTypes entities will have to contain all of the specified components.
+         * @return A Builder singleton instance to get a family
+         */
+        @SafeVarargs
+        public final Builder all(Class<? extends Component>... componentTypes) {
+            all = ComponentType.getBitsFor(componentTypes);
+            return this;
+        }
 
-		int numBits = bits.length();
-		for (int i = 0; i < numBits; ++i) {
-			stringBuilder.append(bits.get(i) ? "1" : "0");
-		}
+        /**
+         * @param componentTypes entities will have to contain at least one of the specified components.
+         * @return A Builder singleton instance to get a family
+         */
+        @SafeVarargs
+        public final Builder one(Class<? extends Component>... componentTypes) {
+            one = ComponentType.getBitsFor(componentTypes);
+            return this;
+        }
 
-		return stringBuilder.toString();
-	}
+        /**
+         * @param componentTypes entities cannot contain any of the specified components.
+         * @return A Builder singleton instance to get a family
+         */
+        @SafeVarargs
+        public final Builder exclude(Class<? extends Component>... componentTypes) {
+            exclude = ComponentType.getBitsFor(componentTypes);
+            return this;
+        }
+
+        /** @return A family for the configured component types */
+        public Family get() {
+            String hash = getFamilyHash(all, one, exclude);
+            Family family = families.get(hash, null);
+            if (family == null) {
+                family = new Family(all, one, exclude);
+                families.put(hash, family);
+            }
+            return family;
+        }
+    }
 }

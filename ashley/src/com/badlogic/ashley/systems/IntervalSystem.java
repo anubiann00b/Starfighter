@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,42 +24,42 @@ import com.badlogic.ashley.core.EntitySystem;
  * @author David Saltares
  */
 public abstract class IntervalSystem extends EntitySystem {
-	private float interval;
-	private float accumulator;
+    private float interval;
+    private float accumulator;
 
-	/**
-	 * @param interval time in seconds between calls to {@link IntervalSystem#updateInterval()}.
-	 */
-	public IntervalSystem (float interval) {
-		this(interval, 0);
-	}
+    /**
+     * @param interval time in seconds between calls to {@link IntervalSystem#updateInterval()}.
+     */
+    public IntervalSystem(float interval) {
+        this(interval, 0);
+    }
 
-	/**
-	 * @param interval time in seconds between calls to {@link IntervalSystem#updateInterval()}.
-	 * @param priority
-	 */
-	public IntervalSystem (float interval, int priority) {
-		super(priority);
-		this.interval = interval;
-		this.accumulator = 0;
-	}
+    /**
+     * @param interval time in seconds between calls to {@link IntervalSystem#updateInterval()}.
+     * @param priority
+     */
+    public IntervalSystem(float interval, int priority) {
+        super(priority);
+        this.interval = interval;
+        this.accumulator = 0;
+    }
 
-	public float getInterval() {
-		return interval;
-	}
+    public float getInterval() {
+        return interval;
+    }
 
-	@Override
-	public final void update (float deltaTime) {
-		accumulator += deltaTime;
+    @Override
+    public final void update(float deltaTime) {
+        accumulator += deltaTime;
 
-		while (accumulator >= interval) {
-			accumulator -= interval;
-			updateInterval();
-		}
-	}
+        while (accumulator >= interval) {
+            accumulator -= interval;
+            updateInterval();
+        }
+    }
 
-	/**
-	 * The processing logic of the system should be placed here.
-	 */
-	protected abstract void updateInterval ();
+    /**
+     * The processing logic of the system should be placed here.
+     */
+    protected abstract void updateInterval();
 }

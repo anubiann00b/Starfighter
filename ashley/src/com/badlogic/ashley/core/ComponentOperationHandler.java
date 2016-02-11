@@ -5,89 +5,90 @@ import com.badlogic.gdx.utils.Pool;
 
 
 class ComponentOperationHandler {
-	private BooleanInformer delayed;
-	private ComponentOperationPool operationPool = new ComponentOperationPool();;
- 	private Array<ComponentOperation> operations = new Array<ComponentOperation>();;
+    private BooleanInformer delayed;
+    private ComponentOperationPool operationPool = new ComponentOperationPool();
+    ;
+    private Array<ComponentOperation> operations = new Array<ComponentOperation>();
+    ;
 
- 	public ComponentOperationHandler(BooleanInformer delayed) {
- 		this.delayed = delayed;
- 	}
- 	
-	public void add(Entity entity) {
-		if (delayed.value()) {
-			ComponentOperation operation = operationPool.obtain();
-			operation.makeAdd(entity);
-			operations.add(operation);
-		}
-		else {
-			entity.notifyComponentAdded();
-		}
-	}
+    public ComponentOperationHandler(BooleanInformer delayed) {
+        this.delayed = delayed;
+    }
 
-	public void remove(Entity entity) {
-		if (delayed.value()) {
-			ComponentOperation operation = operationPool.obtain();
-			operation.makeRemove(entity);
-			operations.add(operation);
-		}
-		else {
-			entity.notifyComponentRemoved();
-		}
-	}
-	
-	public void processOperations() {
-		for (int i = 0; i < operations.size; ++i) {
-			ComponentOperation operation = operations.get(i);
+    public void add(Entity entity) {
+        if (delayed.value()) {
+            ComponentOperation operation = operationPool.obtain();
+            operation.makeAdd(entity);
+            operations.add(operation);
+        } else {
+            entity.notifyComponentAdded();
+        }
+    }
 
-			switch(operation.type) {
-				case Add:
-					operation.entity.notifyComponentAdded();
-					break;
-				case Remove:
-					operation.entity.notifyComponentRemoved();
-					break;
-				default: break;
-			}
+    public void remove(Entity entity) {
+        if (delayed.value()) {
+            ComponentOperation operation = operationPool.obtain();
+            operation.makeRemove(entity);
+            operations.add(operation);
+        } else {
+            entity.notifyComponentRemoved();
+        }
+    }
 
-			operationPool.free(operation);
-		}
+    public void processOperations() {
+        for (int i = 0; i < operations.size; ++i) {
+            ComponentOperation operation = operations.get(i);
 
-		operations.clear();
-	}
-	
-	private static class ComponentOperation implements Pool.Poolable {
-		public enum Type {
-			Add,
-			Remove,
-		}
+            switch (operation.type) {
+                case Add:
+                    operation.entity.notifyComponentAdded();
+                    break;
+                case Remove:
+                    operation.entity.notifyComponentRemoved();
+                    break;
+                default:
+                    break;
+            }
 
-		public Type type;
-		public Entity entity;
+            operationPool.free(operation);
+        }
 
-		public void makeAdd(Entity entity) {
-			this.type = Type.Add;
-			this.entity = entity;
-		}
+        operations.clear();
+    }
 
-		public void makeRemove(Entity entity) {
-			this.type = Type.Remove;
-			this.entity = entity;
-		}
+    interface BooleanInformer {
+        public boolean value();
+    }
 
-		@Override
-		public void reset() {
-			entity = null;
-		}
-	}
-	
-	private static class ComponentOperationPool extends Pool<ComponentOperation> {
-		@Override
-		protected ComponentOperation newObject() {
-			return new ComponentOperation();
-		}
-	}
-	
-	interface BooleanInformer {
-		public boolean value();
-	}
+    private static class ComponentOperation implements Pool.Poolable {
+        public Type type;
+        public Entity entity;
+
+        public void makeAdd(Entity entity) {
+            this.type = Type.Add;
+            this.entity = entity;
+        }
+
+        public void makeRemove(Entity entity) {
+            this.type = Type.Remove;
+            this.entity = entity;
+        }
+
+        @Override
+        public void reset() {
+            entity = null;
+        }
+
+        public enum Type {
+            Add,
+            Remove,
+        }
+    }
+
+    private static class ComponentOperationPool extends Pool<ComponentOperation> {
+        @Override
+        protected ComponentOperation newObject() {
+            return new ComponentOperation();
+        }
+    }
 }
