@@ -62,7 +62,7 @@ project(":html") {
         compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
-        compile "com.badlogicgames.ashley:ashley:$ashleyVersion:sources"
+        compile project(":ashley")
         compile "com.sksamuel.gwt:gwt-websockets:1.0.4"
     }
 }
@@ -73,10 +73,16 @@ project(":core") {
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
-        compile "com.esotericsoftware.kryo:kryo:2.24.0"
-//        compile "name.pehl:piriti-user:0.10"
-//        compile "name.pehl:piriti-dev:0.10"
+        compile project(":ashley")
+    }
+}
+
+project(":ashley") {
+    apply plugin: "java"
+
+
+    dependencies {
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
     }
 }
 
